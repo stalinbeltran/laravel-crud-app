@@ -101,3 +101,47 @@ obtenemos error "Could not open input file: artisan":
 failed to solve: rpc error: code = Unknown desc = executor failed running [/bin/sh -c php artisan config:cache &&     php artisan route:cache &&     chmod 777 -R /var/www/html/storage/ &&     chown -R www-data:www-data /var/www/ &&     a2enmod rewrite]: exit code: 1
 
 
+6. Al establecer el directorio de trabajo en el Dockerfile:
+
+
+RUN docker-php-ext-install pdo pdo_mysql
+
+COPY --from=build /app /var/www/html
+
+#setear directorio de trabajo:
+WORKDIR /var/www/html
+
+
+y luego al recrear el contenedor:
+docker compose up -d --build
+
+C:\desarrollo\pruebasDocker\laravel-crud-app>docker compose up -d --build
+[+] Building 38.4s (15/15) FINISHED
+ => [internal] load build definition from Dockerfile                                                                0.1s
+ => => transferring dockerfile: 495B                                                                                0.0s
+ => [internal] load .dockerignore                                                                                   0.0s
+ => => transferring context: 2B                                                                                     0.0s
+ => [internal] load metadata for docker.io/library/php:8.0.12-apache                                                0.0s
+ => [internal] load metadata for docker.io/library/composer:2.0                                                     3.1s
+ => [auth] library/composer:pull token for registry-1.docker.io                                                     0.0s
+ => [internal] load build context                                                                                   4.3s
+ => => transferring context: 667.81kB                                                                               4.2s
+ => CACHED [build 1/3] FROM docker.io/library/composer:2.0@sha256:b3703ad1ca8e91a301c2653844633a9aa91734f3fb278c56  0.0s
+ => [production 1/5] FROM docker.io/library/php:8.0.12-apache                                                       0.0s
+ => [build 2/3] COPY . /app/                                                                                        1.0s
+ => [build 3/3] RUN composer install                                                                                1.9s
+ => CACHED [production 2/5] RUN docker-php-ext-install pdo pdo_mysql                                                0.0s
+ => [production 3/5] COPY --from=build /app /var/www/html                                                           1.1s
+ => [production 4/5] WORKDIR /var/www/html                                                                          0.1s
+ => [production 5/5] RUN php artisan config:cache &&     php artisan route:cache &&     chmod 777 -R /var/www/htm  22.4s
+ => exporting to image                                                                                              3.8s
+ => => exporting layers                                                                                             3.7s
+ => => writing image sha256:e645a941980219bc645f0445b449ef5a62cc216d2bcbb12e3b10be4067555623                        0.0s
+ => => naming to docker.io/library/laravel-crud-app_app                                                             0.0s
+[+] Running 1/1
+ - Container laravel-crud-app-app-1  Started                                                                       10.5s
+
+desaparece error de artisan
+
+
+
