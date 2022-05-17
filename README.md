@@ -162,3 +162,27 @@ Not Found
 
 http://localhost:5000/public/index.php
 
+
+9. Agregando puerto 8000 al Dockerfile y al docker-compose:
+
+
+#abrimos puerto
+EXPOSE 8000
+
+
+    ports:
+      - "5000:80"
+      - "8000:8000"
+
+
+y ejecutando php artisan serve:
+
+root@f9af990357fd:/var/www/html# php artisan serve
+Starting Laravel development server: http://127.0.0.1:8000
+[Tue May 17 20:25:44 2022] PHP 8.0.12 Development Server (http://127.0.0.1:8000) started
+
+
+no podemos acceder desde nuestro browser a http://localhost:8000/
+Error: The connection was reset
+
+
