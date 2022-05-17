@@ -69,3 +69,12 @@ Warning: require(/var/www/html/../vendor/autoload.php): Failed to open stream: N
 
 Fatal error: Uncaught Error: Failed opening required '/var/www/html/../vendor/autoload.php' (include_path='.:/usr/local/lib/php') in /var/www/html/index.php:34 Stack trace: #0 {main} thrown in /var/www/html/index.php on line 34
 
+
+4. Al eliminar el volumen de docker-compose.yml, y realizar un cambio en welcome.blade, obtenemos este error en url http://localhost:5000/public/
+
+UnexpectedValueException
+The stream or file "/var/www/html/storage/logs/laravel.log" could not be opened in append mode: Failed to open stream: Permission denied 
+
+Puede ser un error generado por falta de permisos en los folders del sistema.
+
+
