@@ -158,4 +158,7 @@ y se obtiene Not Found error en http://localhost:5000/public/students:
 Not Found
 
 
+8. Esta url sí funciona:
+
+http://localhost:5000/public/index.php
 
