@@ -57,3 +57,15 @@ C:\desarrollo\pruebasDocker\laravel-crud-app>docker compose up -d --build
 vemos que funciona la compilación
 y se muestra pagina Laravel default en la url:
 http://localhost:5000/public/
+
+3. Al corregir el docker-compose.yml con:
+
+    volumes:
+      - ./public:/var/www/html
+
+compila sin problema, pero obtenemos este error en url http://localhost:5000/:
+
+Warning: require(/var/www/html/../vendor/autoload.php): Failed to open stream: No such file or directory in /var/www/html/index.php on line 34
+
+Fatal error: Uncaught Error: Failed opening required '/var/www/html/../vendor/autoload.php' (include_path='.:/usr/local/lib/php') in /var/www/html/index.php:34 Stack trace: #0 {main} thrown in /var/www/html/index.php on line 34
+

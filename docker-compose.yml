@@ -4,7 +4,7 @@ services:
     build:
       context: ./
     volumes:
-      - ./public :/var/www/html
+      - ./public:/var/www/html
     ports:
       - "5000:80"
     environment:
