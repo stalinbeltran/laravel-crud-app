@@ -144,4 +144,18 @@ C:\desarrollo\pruebasDocker\laravel-crud-app>docker compose up -d --build
 desaparece error de artisan
 
 
+7. En este punto, obtenemos un error en http://localhost:5000/public/:
+
+Oops! An Error Occurred
+The server returned a "405 Method Not Allowed".
+
+Something is broken. Please let us know what you were doing when this error occurred. We will fix it as soon as possible. Sorry for any inconvenience caused.
+
+
+y se obtiene Not Found error en http://localhost:5000/public/students:
+
+404
+Not Found
+
+
 
