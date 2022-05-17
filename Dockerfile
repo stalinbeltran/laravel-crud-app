@@ -11,3 +11,8 @@ RUN docker-php-ext-install pdo pdo_mysql
 
 COPY --from=build /app /var/www/html
 
+RUN php artisan config:cache && \
+    php artisan route:cache && \
+    chmod 777 -R /var/www/html/storage/ && \
+    chown -R www-data:www-data /var/www/ && \
+    a2enmod rewrite

@@ -78,3 +78,26 @@ The stream or file "/var/www/html/storage/logs/laravel.log" could not be opened 
 Puede ser un error generado por falta de permisos en los folders del sistema.
 
 
+5. Al agregar comando RUN al Dockerfile:
+
+RUN php artisan config:cache && \
+    php artisan route:cache && \
+    chmod 777 -R /var/www/html/storage/ && \
+    chown -R www-data:www-data /var/www/ && \
+    a2enmod rewrite
+
+y al compilar con:
+docker compose up -d --build
+
+obtenemos error "Could not open input file: artisan":
+
+=> CACHED [production 2/4] RUN docker-php-ext-install pdo pdo_mysql                                                0.0s
+ => [production 3/4] COPY --from=build /app /var/www/html                                                           1.1s
+ => ERROR [production 4/4] RUN php artisan config:cache &&     php artisan route:cache &&     chmod 777 -R /var/ww  0.5s
+------
+ > [production 4/4] RUN php artisan config:cache &&     php artisan route:cache &&     chmod 777 -R /var/www/html/storage/ &&     chown -R www-data:www-data /var/www/ &&     a2enmod rewrite:
+#12 0.503 Could not open input file: artisan
+------
+failed to solve: rpc error: code = Unknown desc = executor failed running [/bin/sh -c php artisan config:cache &&     php artisan route:cache &&     chmod 777 -R /var/www/html/storage/ &&     chown -R www-data:www-data /var/www/ &&     a2enmod rewrite]: exit code: 1
+
+
