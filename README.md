@@ -21,3 +21,39 @@ C:\desarrollo\pruebasDocker\laravel-crud-app>docker compose up -d
  - Container 4b9715a67b89_4b9715a67b89_4b9715a67b89_laravel-crud-app-app-1  Recreate                                0.1s
 Error response from daemon: The system cannot find the file specified.
 
+
+2. Al corregir docker-compose.yml con:
+
+    volumes:
+      - .:/var/www/html
+
+y al compilar:
+docker compose up -d --build
+
+C:\desarrollo\pruebasDocker\laravel-crud-app>docker compose up -d --build
+[+] Building 9.0s (13/13) FINISHED
+ => [internal] load build definition from Dockerfile                                                                0.0s
+ => => transferring dockerfile: 283B                                                                                0.0s
+ => [internal] load .dockerignore                                                                                   0.0s
+ => => transferring context: 2B                                                                                     0.0s
+ => [internal] load metadata for docker.io/library/php:8.0.12-apache                                                0.0s
+ => [internal] load metadata for docker.io/library/composer:2.0                                                     3.1s
+ => [auth] library/composer:pull token for registry-1.docker.io                                                     0.0s
+ => [internal] load build context                                                                                   2.9s
+ => => transferring context: 651.46kB                                                                               2.9s
+ => CACHED [build 1/3] FROM docker.io/library/composer:2.0@sha256:b3703ad1ca8e91a301c2653844633a9aa91734f3fb278c56  0.0s
+ => [production 1/3] FROM docker.io/library/php:8.0.12-apache                                                       0.0s
+ => [build 2/3] COPY . /app/                                                                                        1.0s
+ => [build 3/3] RUN composer install                                                                                1.7s
+ => CACHED [production 2/3] RUN docker-php-ext-install pdo pdo_mysql                                                0.0s
+ => CACHED [production 3/3] COPY --from=build /app/public /var/www/html                                             0.0s
+ => exporting to image                                                                                              0.1s
+ => => exporting layers                                                                                             0.0s
+ => => writing image sha256:6cc495d39f5c2a3ac72776ea155aad5ec58df967ddf571485c3ac14467e200af                        0.0s
+ => => naming to docker.io/library/laravel-crud-app_app                                                             0.0s
+[+] Running 1/0
+ - Container laravel-crud-app-app-1  Running                                                                        0.0s
+
+vemos que funciona la compilación
+y se muestra pagina Laravel default en la url:
+http://localhost:5000/public/
