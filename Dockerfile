@@ -9,5 +9,5 @@ ENV APP_DEBUG=false
 
 RUN docker-php-ext-install pdo pdo_mysql
 
-COPY --from=build /app /var/www/html
+COPY --from=build /app/public /var/www/html
 
