@@ -208,3 +208,58 @@ http://localhost:8000/public/students
 http://localhost:8000/public/students/create
 
 
+12. Instalamos laravel sail:
+composer require laravel/sail --dev
+
+C:\desarrollo\pruebasDocker\laravel-crud-app>composer require laravel/sail --dev
+Info from https://repo.packagist.org: #StandWithUkraine
+Using version ^1.15 for laravel/sail
+./composer.json has been updated
+Running composer update laravel/sail
+Loading composer repositories with package information
+Info from https://repo.packagist.org: #StandWithUkraine
+Updating dependencies
+Lock file operations: 1 install, 0 updates, 0 removals
+  - Locking laravel/sail (v1.15.0)
+Writing lock file
+Installing dependencies from lock file (including require-dev)
+Package operations: 0 installs, 1 update, 0 removals
+  - Downloading laravel/sail (v1.15.0)
+  - Upgrading laravel/sail (v1.14.4 => v1.15.0): Extracting archive
+Generating optimized autoload files
+> Illuminate\Foundation\ComposerScripts::postAutoloadDump
+> @php artisan package:discover --ansi
+Discovered Package: facade/ignition
+Discovered Package: fideloper/proxy
+Discovered Package: fruitcake/laravel-cors
+Discovered Package: laravel/sail
+Discovered Package: laravel/tinker
+Discovered Package: nesbot/carbon
+Discovered Package: nunomaduro/collision
+Package manifest generated successfully.
+72 packages you are using are looking for funding.
+Use the `composer fund` command to find out more!
+
+
+13. Ejecutamos comando:
+php artisan sail:install
+
+C:\desarrollo\pruebasDocker\laravel-crud-app>php artisan sail:install
+
+ Which services would you like to install? [mysql]:
+  [0] mysql
+  [1] pgsql
+  [2] mariadb
+  [3] redis
+  [4] memcached
+  [5] meilisearch
+  [6] minio
+  [7] mailhog
+  [8] selenium
+ > 0
+
+Sail scaffolding installed successfully.
+
+
+
+
