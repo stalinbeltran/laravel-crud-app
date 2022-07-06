@@ -186,3 +186,25 @@ no podemos acceder desde nuestro browser a http://localhost:8000/
 Error: The connection was reset
 
 
+10. Al ejecutar el proyecto localmente con:
+php artisan serve
+
+hallamos estos errores:}
+SQLSTATE[HY000] [1045] Access denied for user 'sail'@'localhost' (using password: YES) (SQL: select * from `students`) :
+http://localhost:8000/public/students
+
+not found:
+http://localhost:8000/public/
+
+
+
+11. Creamos una DB vacia (en este caso con nombre 'laravel_db'), y la configuramos en el .env.
+Luego al ejecutar el comando:
+php artisan migrate
+
+se crean varias tablas en la DB.
+Ahora sí funcionan los links:
+http://localhost:8000/public/students
+http://localhost:8000/public/students/create
+
+
