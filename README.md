@@ -347,4 +347,48 @@ pero no podemos ejecutar la aplicación en el browser porque no tenemos un puert
 EXPOSE 8000
 
 
+19. Mapeamos puerto 5000 en localhost a 8000 container en archivo docker-compose.yml:
+
+ version: "3.7"
+
+ services:
+   app1:
+     ports:
+       - 5000:8000
+
+
+20. Para verificar, compilammos proyecto con docker compose:
+docker compose up -d --build
+
+
+C:\desarrollo\pruebasDocker\laravel-crud-app>docker compose up -d --build
+[+] Building 11.7s (9/9) FINISHED
+ => [internal] load build definition from Dockerfile                                                               0.0s
+ => => transferring dockerfile: 132B                                                                               0.0s
+ => [internal] load .dockerignore                                                                                  0.0s
+ => => transferring context: 2B                                                                                    0.0s
+ => [internal] load metadata for docker.io/library/composer:2.0                                                    2.6s
+ => [auth] library/composer:pull token for registry-1.docker.io                                                    0.0s
+ => [internal] load build context                                                                                  3.4s
+ => => transferring context: 36.58MB                                                                               3.4s
+ => CACHED [1/3] FROM docker.io/library/composer:2.0@sha256:b3703ad1ca8e91a301c2653844633a9aa91734f3fb278c56e2745  0.0s
+ => [2/3] COPY . /app/                                                                                             1.8s
+ => [3/3] RUN composer install                                                                                     2.4s
+ => exporting to image                                                                                             1.3s
+ => => exporting layers                                                                                            1.3s
+ => => writing image sha256:cde5904a2bd80921ac44b72b1b175e3c5ef4890f92701e56930ad5472805b405                       0.0s
+ => => naming to docker.io/sbeltran2006/laravel-crud-app                                                           0.0s
+[+] Running 1/1
+ - Container laravel-crud-app-app1-1  Started                                                                      1.8s
+
+
+Pero vemos que el container salió, nunca se ejecutó. Tal vez falta una aplicación que se ejecute todo el tiempo, para que no se termine la ejecución del container.
+
+
+
+
+
+
+
+
 
