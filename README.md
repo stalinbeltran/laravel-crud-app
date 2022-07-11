@@ -340,3 +340,11 @@ Starting Laravel development server: http://127.0.0.1:8000
 
 pero no podemos ejecutar la aplicación en el browser porque no tenemos un puerto abierto
 
+
+18. Abrimos un puerto en Dockerfile:
+
+#abrimos puerto 8000
+EXPOSE 8000
+
+
+
