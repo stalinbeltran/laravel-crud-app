@@ -260,6 +260,17 @@ C:\desarrollo\pruebasDocker\laravel-crud-app>php artisan sail:install
 
 Sail scaffolding installed successfully.
 
+14. Al ejecutar comando:
+COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 ./vendor/bin/sail build
+
+obtenemos un error (Laravel Sail no está hecho para windows sin WSL usar)
+C:\desarrollo\pruebasDocker\laravel-crud-app>COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 ./vendor/bin/sail build
+"COMPOSE_DOCKER_CLI_BUILD" no se reconoce como un comando interno o externo,
+programa o archivo por lotes ejecutable.
+
+Esto dificulta considerablemente la implementación de Sail para este proyecto (usar WSL no es una opción atractiva en este momento)
+La alternativa es crear manualmente un contenedor que realice las mismas funciones.
+
 
 
 
