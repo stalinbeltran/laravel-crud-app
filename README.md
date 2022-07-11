@@ -274,3 +274,44 @@ La alternativa es crear manualmente un contenedor que realice las mismas funcion
 
 
 
+
+
+
+
+
+
+
+
+
+15. Empezamos la implementacion manual de entorno de desarrollo laravel. Avanzaremos paso a paso para entender lo que se está haciendo.
+Primero reducimos Dockerfile a lo sgte:
+
+FROM composer:2.0 as build
+COPY . /app/
+RUN composer install
+
+Luego compilamos la imagen con nombre 'laravel-crud-app'
+
+docker build -t sbeltran2006/laravel-crud-app .
+
+C:\desarrollo\pruebasDocker\laravel-crud-app>docker build -t sbeltran2006/laravel-crud-app .
+[+] Building 16.2s (9/9) FINISHED
+ => [internal] load build definition from Dockerfile                                                               0.1s
+ => => transferring dockerfile: 98B                                                                                0.0s
+ => [internal] load .dockerignore                                                                                  0.0s
+ => => transferring context: 2B                                                                                    0.0s
+ => [internal] load metadata for docker.io/library/composer:2.0                                                    3.7s
+ => [auth] library/composer:pull token for registry-1.docker.io                                                    0.0s
+ => [internal] load build context                                                                                  6.5s
+ => => transferring context: 36.56MB                                                                               6.4s
+ => CACHED [1/3] FROM docker.io/library/composer:2.0@sha256:b3703ad1ca8e91a301c2653844633a9aa91734f3fb278c56e2745  0.0s
+ => [2/3] COPY . /app/                                                                                             1.9s
+ => [3/3] RUN composer install                                                                                     2.5s
+ => exporting to image                                                                                             1.4s
+ => => exporting layers                                                                                            1.4s
+ => => writing image sha256:8eec97aef90ffadb62ba113248380a253bbad217949574d72b846ad26403d0d8                       0.0s
+ => => naming to docker.io/sbeltran2006/laravel-crud-app                                                           0.0s
+
+
+
+
