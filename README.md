@@ -314,4 +314,29 @@ C:\desarrollo\pruebasDocker\laravel-crud-app>docker build -t sbeltran2006/larave
 
 
 
+16. Revisamos el contenido de la imagen:
+docker run -it sbeltran2006/laravel-crud-app sh
+
+C:\desarrollo\pruebasDocker\laravel-crud-app>docker run -it sbeltran2006/laravel-crud-app sh
+/app # ls
+Dockerfile  artisan        composer.lock  docker-compose.yml  public     server.php  vendor
+README.md   bootstrap      config         package.json        resources  storage     webpack.mix.js
+app         composer.json  database       phpunit.xml         routes     tests
+
+
+Notamos que se han copiado los archivos del proyecto, como se espera por la instrucción en Dockerfile:
+
+COPY . /app/
+
+
+
+17. Probamos a ejecutar el proyecto:
+php artisan serve
+
+/app # php artisan serve
+Starting Laravel development server: http://127.0.0.1:8000
+[Mon Jul 11 20:32:36 2022] PHP 8.0.6 Development Server (http://127.0.0.1:8000) started
+
+
+pero no podemos ejecutar la aplicación en el browser porque no tenemos un puerto abierto
 
