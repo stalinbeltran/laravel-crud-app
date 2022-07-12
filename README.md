@@ -397,6 +397,10 @@ docker compose up -d --build
 vemos que esta imagen se sigue ejecutando (al contrario de la imagen "composer:2.0" )
 
 
+22. Al volver a probar sólo con composer en Dockerfile:
 
+FROM composer:2.0 
+
+verificamos que container sale al instante.
 
 
