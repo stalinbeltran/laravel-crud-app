@@ -385,8 +385,16 @@ C:\desarrollo\pruebasDocker\laravel-crud-app>docker compose up -d --build
 Pero vemos que el container salió, nunca se ejecutó. Tal vez falta una aplicación que se ejecute todo el tiempo, para que no se termine la ejecución del container.
 
 
+21. Cambiando el Dockerfile:
 
+#agregamos imagen base:
+FROM php:8.0.12-apache
 
+y ejecutando el contenedor:
+
+docker compose up -d --build
+
+vemos que esta imagen se sigue ejecutando (al contrario de la imagen "composer:2.0" )
 
 
 
