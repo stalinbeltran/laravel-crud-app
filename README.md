@@ -395,8 +395,19 @@ docker compose up -d --build
 El contenedor se mantiene en ejecución, pero no es accesible desde localhost.
 
 
+22. Haciendo pruebas e investigando, hallé que el problema está en el comando laravel:
+
+php artisan serve
+que debería agregar el parámetro host:
+php artisan serve --host 172.17.0.2
+
+y al hacerlo así, funcionan estas páginas:
+
+http://localhost:5000                   #muestra index laravel default
+http://localhost:5000/students/create   #muestra crear estudiante
 
 
+El problema con esta opción es que tenemos q conocer la IP del container, y la obtuvimos manualmente.
 
 
 
