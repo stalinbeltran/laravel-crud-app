@@ -385,6 +385,15 @@ C:\desarrollo\pruebasDocker\laravel-crud-app>docker compose up -d --build
 Pero vemos que el container salió, nunca se ejecutó. Tal vez falta una aplicación que se ejecute todo el tiempo, para que no se termine la ejecución del container.
 
 
+21. Probamos agregar un ENTRYPOINT al Dockerfile:
+
+ENTRYPOINT ["php", "artisan", "serve"]
+
+y compilamos:
+docker compose up -d --build
+
+El contenedor se mantiene en ejecución, pero no es accesible desde localhost.
+
 
 
 
