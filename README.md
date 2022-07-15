@@ -410,5 +410,8 @@ http://localhost:5000/students/create   #muestra crear estudiante
 El problema con esta opción es que tenemos q conocer la IP del container, y la obtuvimos manualmente.
 
 
+23. Probamos a usar la ip localhost:
 
+php artisan serve --host 127.0.0.1
 
+pero no funciona. No obtenemos ninguna respuesta desde el host.
