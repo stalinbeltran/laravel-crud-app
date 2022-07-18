@@ -513,4 +513,8 @@ http://localhost:5000/
 http://localhost:5000/students/create
 
 
+28. Podemos ejecutarla en segundo plano con este comando:
+docker run -d -p 5000:8000  sbeltran2006/laravel-crud-app
+
+que es el objetivo de tener un container para desarrollo en Laravel.
 
