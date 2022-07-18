@@ -496,3 +496,21 @@ docker run -it sbeltran2006/laravel-crud-app
 pero no tenemos acceso desde el browser en laptop (host)
 
 
+27. Exponemos puerto 8000 en Dockerfile (puede ser la causa del problema):
+
+#abrimos puerto 8000
+EXPOSE 8000
+
+Recompilamos:
+docker compose up -d --build
+
+y ejecutamos:
+docker run -it -p 5000:8000  sbeltran2006/laravel-crud-app
+
+y ahora sí funciona en el browser de host:
+urls:
+http://localhost:5000/
+http://localhost:5000/students/create
+
+
+
