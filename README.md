@@ -518,3 +518,13 @@ docker run -d -p 5000:8000  sbeltran2006/laravel-crud-app
 
 que es el objetivo de tener un container para desarrollo en Laravel.
 
+29. Al cambiar el contenido de un view:
+
+          <div class="form-group">
+              @csrf
+              <label for="name">Name XXX</label>
+              <input type="text" class="form-control" name="name"/>
+          </div>
+
+notamos que no se actualiza. Falta lograr ese efecto, posiblemente creando un volumen
+
