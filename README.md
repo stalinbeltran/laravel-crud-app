@@ -415,3 +415,37 @@ El problema con esta opción es que tenemos q conocer la IP del container, y la 
 php artisan serve --host 127.0.0.1
 
 pero no funciona. No obtenemos ninguna respuesta desde el host.
+
+
+24. Probamos a usar "host.docker.internal" para obtener IP interna del container:
+docker run -it -p 5000:8000  sbeltran2006/laravel-crud-app sh
+php artisan serve --host host.docker.internal
+
+pero falla porque la dirección no está disponible
+
+C:\desarrollo\pruebasDocker\laravel-crud-app>docker run -it -p 5000:8000  sbeltran2006/laravel-crud-app sh
+/app # php artisan serve --host host.docker.internal
+Starting Laravel development server: http://host.docker.internal:8000
+[Mon Jul 18 13:06:44 2022] Failed to listen on host.docker.internal:8000 (reason: Address not available)
+Starting Laravel development server: http://host.docker.internal:8001
+[Mon Jul 18 13:06:44 2022] Failed to listen on host.docker.internal:8001 (reason: Address not available)
+Starting Laravel development server: http://host.docker.internal:8002
+[Mon Jul 18 13:06:45 2022] Failed to listen on host.docker.internal:8002 (reason: Address not available)
+Starting Laravel development server: http://host.docker.internal:8003
+[Mon Jul 18 13:06:45 2022] Failed to listen on host.docker.internal:8003 (reason: Address not available)
+Starting Laravel development server: http://host.docker.internal:8004
+[Mon Jul 18 13:06:46 2022] Failed to listen on host.docker.internal:8004 (reason: Address not available)
+Starting Laravel development server: http://host.docker.internal:8005
+[Mon Jul 18 13:06:46 2022] Failed to listen on host.docker.internal:8005 (reason: Address not available)
+Starting Laravel development server: http://host.docker.internal:8006
+[Mon Jul 18 13:06:47 2022] Failed to listen on host.docker.internal:8006 (reason: Address not available)
+Starting Laravel development server: http://host.docker.internal:8007
+[Mon Jul 18 13:06:47 2022] Failed to listen on host.docker.internal:8007 (reason: Address not available)
+Starting Laravel development server: http://host.docker.internal:8008
+[Mon Jul 18 13:06:48 2022] Failed to listen on host.docker.internal:8008 (reason: Address not available)
+Starting Laravel development server: http://host.docker.internal:8009
+[Mon Jul 18 13:06:48 2022] Failed to listen on host.docker.internal:8009 (reason: Address not available)
+Starting Laravel development server: http://host.docker.internal:8010
+[Mon Jul 18 13:06:49 2022] Failed to listen on host.docker.internal:8010 (reason: Address not available)
+/app #
+

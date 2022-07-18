@@ -6,4 +6,4 @@ RUN composer install
 EXPOSE 8000
 
 #configuramos el container para que ejecute laravel en desarrollo:
-ENTRYPOINT ["php", "artisan", "serve"]
+#ENTRYPOINT ["php", "artisan", "serve", "--host", "host.docker.internal"]
