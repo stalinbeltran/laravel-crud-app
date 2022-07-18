@@ -449,3 +449,50 @@ Starting Laravel development server: http://host.docker.internal:8010
 [Mon Jul 18 13:06:49 2022] Failed to listen on host.docker.internal:8010 (reason: Address not available)
 /app #
 
+25. Verificamos, y sí funciona usando
+php artisan serve --host 172.17.0.2
+
+lo que indica que host.docker.internal no nos da la ip interna del contenedor
+
+
+26. Cambiamos el entrypoint en Dockerfile:
+
+#configuramos el container para que ejecute laravel en desarrollo:
+ENTRYPOINT ["php", "artisan", "serve", "--host", "172.17.0.2"]
+
+recompilamos:
+docker compose up -d --build
+
+C:\desarrollo\pruebasDocker\laravel-crud-app>docker compose up -d --build
+[+] Building 10.3s (9/9) FINISHED
+ => [internal] load build definition from Dockerfile                                                               0.0s
+ => => transferring dockerfile: 267B                                                                               0.0s
+ => [internal] load .dockerignore                                                                                  0.0s
+ => => transferring context: 2B                                                                                    0.0s
+ => [internal] load metadata for docker.io/library/composer:2.0                                                    2.8s
+ => [auth] library/composer:pull token for registry-1.docker.io                                                    0.0s
+ => [internal] load build context                                                                                  3.4s
+ => => transferring context: 670.16kB                                                                              3.3s
+ => CACHED [1/3] FROM docker.io/library/composer:2.0@sha256:b3703ad1ca8e91a301c2653844633a9aa91734f3fb278c56e2745  0.0s
+ => [2/3] COPY . /app/                                                                                             0.9s
+ => [3/3] RUN composer install                                                                                     1.7s
+ => exporting to image                                                                                             1.3s
+ => => exporting layers                                                                                            1.3s
+ => => writing image sha256:cba11b68153365e9bed280d059a67290ed5b03663eea65e92c36f2d3f92bcbe9                       0.0s
+ => => naming to docker.io/sbeltran2006/laravel-crud-app                                                           0.0s
+[+] Running 1/1
+ - Container laravel-crud-app-app1-1  Started                                                                      4.4s
+
+
+y lo ejecutamos:
+docker run -it sbeltran2006/laravel-crud-app sh
+
+obtenemos:
+ Too many arguments, expected arguments "command".
+
+Sin embargo, funciona si usamos:
+docker run -it sbeltran2006/laravel-crud-app
+
+pero no tenemos acceso desde el browser en laptop (host)
+
+
