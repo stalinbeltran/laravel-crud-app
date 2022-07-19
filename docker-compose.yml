@@ -6,5 +6,4 @@
        - 5000:8000
      build: .
      image: sbeltran2006/laravel-crud-app
-     volumes:
-      - .:/app/
+

@@ -611,4 +611,10 @@ Starting Laravel development server: http://172.17.0.2:8010
 [Tue Jul 19 20:03:27 2022] Failed to listen on 172.17.0.2:8010 (reason: Address not available)
 
 
+32. Removemos volumes del Dockerfile:
+
+     volumes:
+      - .:/app/
+
+compilamos, pero sigue sin funcionar.
 
