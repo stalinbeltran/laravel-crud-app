@@ -1,5 +1,7 @@
 FROM composer:2.0 as build
-#COPY . /app/               no copiamos codigo fuente
+
+#copiamos codigo fuente
+COPY . /app/
 RUN composer install
 
 #abrimos puerto 8000

@@ -558,8 +558,57 @@ y obtenemos el error: "Composer could not find a composer.json file in /app", pr
 
 
 
+31. Copiamos código fuente:
 
+#copiamos codigo fuente
+COPY . /app/
 
+compilamos:
+
+C:\desarrollo\pruebasDocker\laravel-crud-app>docker compose up -d --build
+[+] Building 3.1s (8/8) FINISHED
+ => [internal] load build definition from Dockerfile                                                               0.0s
+ => => transferring dockerfile: 32B                                                                                0.0s
+ => [internal] load .dockerignore                                                                                  0.0s
+ => => transferring context: 2B                                                                                    0.0s
+ => [internal] load metadata for docker.io/library/composer:2.0                                                    1.2s
+ => [internal] load build context                                                                                  1.7s
+ => => transferring context: 649.58kB                                                                              1.7s
+ => [1/3] FROM docker.io/library/composer:2.0@sha256:b3703ad1ca8e91a301c2653844633a9aa91734f3fb278c56e2745f589657  0.0s
+ => CACHED [2/3] COPY . /app/                                                                                      0.0s
+ => CACHED [3/3] RUN composer install                                                                              0.0s
+ => exporting to image                                                                                             0.1s
+ => => exporting layers                                                                                            0.0s
+ => => writing image sha256:9216402bbd954376e3c240ad17005aa86aedb0abcde6d7d419818078dd465eaa                       0.0s
+ => => naming to docker.io/sbeltran2006/laravel-crud-app                                                           0.0s
+[+] Running 1/1
+ - Container laravel-crud-app-app1-1  Started
+
+pero container se apaga (no se ejecuta laravel).
+Container muestra este log:
+
+Starting Laravel development server: http://172.17.0.2:8000
+[Tue Jul 19 20:03:22 2022] Failed to listen on 172.17.0.2:8000 (reason: Address not available)
+Starting Laravel development server: http://172.17.0.2:8001
+[Tue Jul 19 20:03:22 2022] Failed to listen on 172.17.0.2:8001 (reason: Address not available)
+Starting Laravel development server: http://172.17.0.2:8002
+[Tue Jul 19 20:03:23 2022] Failed to listen on 172.17.0.2:8002 (reason: Address not available)
+Starting Laravel development server: http://172.17.0.2:8003
+[Tue Jul 19 20:03:23 2022] Failed to listen on 172.17.0.2:8003 (reason: Address not available)
+Starting Laravel development server: http://172.17.0.2:8004
+[Tue Jul 19 20:03:24 2022] Failed to listen on 172.17.0.2:8004 (reason: Address not available)
+Starting Laravel development server: http://172.17.0.2:8005
+[Tue Jul 19 20:03:24 2022] Failed to listen on 172.17.0.2:8005 (reason: Address not available)
+Starting Laravel development server: http://172.17.0.2:8006
+[Tue Jul 19 20:03:25 2022] Failed to listen on 172.17.0.2:8006 (reason: Address not available)
+Starting Laravel development server: http://172.17.0.2:8007
+[Tue Jul 19 20:03:25 2022] Failed to listen on 172.17.0.2:8007 (reason: Address not available)
+Starting Laravel development server: http://172.17.0.2:8008
+[Tue Jul 19 20:03:26 2022] Failed to listen on 172.17.0.2:8008 (reason: Address not available)
+Starting Laravel development server: http://172.17.0.2:8009
+[Tue Jul 19 20:03:26 2022] Failed to listen on 172.17.0.2:8009 (reason: Address not available)
+Starting Laravel development server: http://172.17.0.2:8010
+[Tue Jul 19 20:03:27 2022] Failed to listen on 172.17.0.2:8010 (reason: Address not available)
 
 
 
