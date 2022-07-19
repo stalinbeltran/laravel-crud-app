@@ -528,3 +528,38 @@ que es el objetivo de tener un container para desarrollo en Laravel.
 
 notamos que no se actualiza. Falta lograr ese efecto, posiblemente creando un volumen
 
+
+30. Modificamos Dockerfile para que no copie codigo fuente:
+
+#COPY . /app/               no copiamos codigo fuente
+
+y compilamos:
+docker compose up -d --build
+
+C:\desarrollo\pruebasDocker\laravel-crud-app>docker compose up -d --build
+[+] Building 5.8s (6/6) FINISHED
+ => [internal] load build definition from Dockerfile                                                               0.1s
+ => => transferring dockerfile: 307B                                                                               0.0s
+ => [internal] load .dockerignore                                                                                  0.0s
+ => => transferring context: 2B                                                                                    0.0s
+ => [internal] load metadata for docker.io/library/composer:2.0                                                    3.4s
+ => [auth] library/composer:pull token for registry-1.docker.io                                                    0.0s
+ => CACHED [1/2] FROM docker.io/library/composer:2.0@sha256:b3703ad1ca8e91a301c2653844633a9aa91734f3fb278c56e2745  0.0s
+ => ERROR [2/2] RUN composer install                                                                               2.0s
+------
+ > [2/2] RUN composer install:
+#5 1.996 Composer could not find a composer.json file in /app
+#5 1.996 To initialize a project, please create a composer.json file as described in the https://getcomposer.org/ "Getting Started" section
+------
+failed to solve: rpc error: code = Unknown desc = executor failed running [/bin/sh -c composer install]: exit code: 1
+
+
+y obtenemos el error: "Composer could not find a composer.json file in /app", probablemente por la falta del código fuente.
+
+
+
+
+
+
+
+
