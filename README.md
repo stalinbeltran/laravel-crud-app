@@ -779,6 +779,8 @@ y al exponer el puerto:
 #abrimos puerto 8000
 EXPOSE 8000
 
+y compilando:
+docker compose up -d --build
 
 funcionan las urls en el browser:
 
@@ -787,5 +789,21 @@ http://localhost:5000/students/create
 
 
 
+40. Al incluir el volumen (antes eliminado) en el docker-compose:
+
+     image: sbeltran2006/laravel-crud-app
+     volumes:
+      - .:/app/
+     networks:
+
+y al modificar el código en localhost, create.blade.php:
+
+          <div class="form-group">
+              @csrf
+              <label for="name">Name XXX uuu</label>
+              <input type="text" class="form-control" name="name"/>
+          </div>
+
+vemos que el cambio se refleja en el browser, que es lo que se desea lograr.
 
 
