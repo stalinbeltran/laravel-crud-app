@@ -9,4 +9,5 @@ RUN composer install
 
 #configuramos el container para que ejecute laravel en desarrollo:
 CMD ["php", "artisan", "serve", "--host", "172.17.0.2"]
+CMD ["ifconfig"]
 

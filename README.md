@@ -657,4 +657,29 @@ laravel-crud-app-app1-1 | Starting Laravel development server: http://172.17.0.2
 
 35. Cambiar ENTRYPOINT por CMD, no resuelve el problema.
 
+36. Al agregar ifconfig a Dockerfile:
 
+#configuramos el container para que ejecute laravel en desarrollo:
+CMD ["php", "artisan", "serve", "--host", "172.17.0.2"]
+CMD ["ifconfig"]
+
+Notamos que el problema es que la IP no es la misma que estamos especificando en el comando, lo que explica el error generado.
+
+Attaching to laravel-crud-app-app1-1
+laravel-crud-app-app1-1 | eth0      Link encap:Ethernet  HWaddr 02:42:AC:1C:00:02  
+laravel-crud-app-app1-1 |           inet addr:172.28.0.2  Bcast:172.28.255.255  Mask:255.255.0.0
+laravel-crud-app-app1-1 |           UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+laravel-crud-app-app1-1 |           RX packets:4 errors:0 dropped:0 overruns:0 frame:0
+laravel-crud-app-app1-1 |           TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+laravel-crud-app-app1-1 |           collisions:0 txqueuelen:0 
+laravel-crud-app-app1-1 |           RX bytes:356 (356.0 B)  TX bytes:0 (0.0 B)
+laravel-crud-app-app1-1 | 
+laravel-crud-app-app1-1 | lo        Link encap:Local Loopback  
+laravel-crud-app-app1-1 |           inet addr:127.0.0.1  Mask:255.0.0.0
+laravel-crud-app-app1-1 |           UP LOOPBACK RUNNING  MTU:65536  Metric:1
+laravel-crud-app-app1-1 |           RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+laravel-crud-app-app1-1 |           TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+laravel-crud-app-app1-1 |           collisions:0 txqueuelen:1000 
+laravel-crud-app-app1-1 |           RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+laravel-crud-app-app1-1 | 
+laravel-crud-app-app1-1 exited with code 0
