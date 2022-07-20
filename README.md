@@ -683,3 +683,14 @@ laravel-crud-app-app1-1 |           collisions:0 txqueuelen:1000
 laravel-crud-app-app1-1 |           RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
 laravel-crud-app-app1-1 | 
 laravel-crud-app-app1-1 exited with code 0
+
+
+37. Al ejecutar:
+docker-compose exec app1 sh
+(app1 es el servicio definido en docker-compose.yml)
+
+no aparece el container en ejecución (o desaparece tan rápido que no lo notamos)
+
+
+
+
