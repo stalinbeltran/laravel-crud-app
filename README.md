@@ -618,3 +618,31 @@ Starting Laravel development server: http://172.17.0.2:8010
 
 compilamos, pero sigue sin funcionar.
 
+
+33. Al remover imagen de docker-compose.yml:
+
+#     image: sbeltran2006/laravel-crud-app
+
+obtenemos el mismo error:
+
+Starting Laravel development server: http://172.17.0.2:8000
+[Tue Jul 19 20:03:22 2022] Failed to listen on 172.17.0.2:8000 (reason: Address not available)
+Starting Laravel development server: http://172.17.0.2:8001
+[Tue Jul 19 20:03:22 2022] Failed to listen on 172.17.0.2:8001 (reason: Address not available)
+...
+
+pero al revisar las imágenes, vemos que se no creó la imagen, lo que indica que al comentar el nombre sólo impedimos que se genere la imagen. Por lo tanto, volvemos a descomentar este punto en docker-compose.yml
+
+     image: sbeltran2006/laravel-crud-app
+
+compilammos:
+docker compose up -d --build
+
+y ahora la imagen sí se genera.
+
+
+
+
+
+
+
