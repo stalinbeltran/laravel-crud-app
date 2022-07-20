@@ -6,4 +6,12 @@
        - 5000:8000
      build: .
      image: sbeltran2006/laravel-crud-app
+     networks:
+      customnetwork:
+        ipv4_address: 172.20.0.10
 
+ networks:
+  customnetwork:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

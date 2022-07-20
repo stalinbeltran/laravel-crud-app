@@ -692,5 +692,100 @@ docker-compose exec app1 sh
 no aparece el container en ejecución (o desaparece tan rápido que no lo notamos)
 
 
+38. Modificamos el docker-compose para que tenga una IP fija:
+
+ version: "3.7"
+
+ services:
+   app1:
+     ports:
+       - 5000:8000
+     build: .
+     image: sbeltran2006/laravel-crud-app
+     networks:
+      customnetwork:
+        ipv4_address: 172.20.0.10
+
+ networks:
+  customnetwork:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+
+al compilar, obtenemos este error:
+
+C:\desarrollo\pruebasDocker\laravel-crud-app>docker compose up -d --build
+[+] Building 9.6s (9/9) FINISHED
+ => [internal] load build definition from Dockerfile                                                               0.0s
+ => => transferring dockerfile: 32B                                                                                0.0s
+ => [internal] load .dockerignore                                                                                  0.0s
+ => => transferring context: 2B                                                                                    0.0s
+ => [internal] load metadata for docker.io/library/composer:2.0                                                    2.6s
+ => [auth] library/composer:pull token for registry-1.docker.io                                                    0.0s
+ => [internal] load build context                                                                                  3.0s
+ => => transferring context: 734.11kB                                                                              3.0s
+ => CACHED [1/3] FROM docker.io/library/composer:2.0@sha256:b3703ad1ca8e91a301c2653844633a9aa91734f3fb278c56e2745  0.0s
+ => [2/3] COPY . /app/                                                                                             1.0s
+ => [3/3] RUN composer install                                                                                     1.6s
+ => exporting to image                                                                                             1.3s
+ => => exporting layers                                                                                            1.3s
+ => => writing image sha256:6afedcafe00c1eddfe82aef67f9165615f39d387aa37011cb401542de833041b                       0.0s
+ => => naming to docker.io/sbeltran2006/laravel-crud-app                                                           0.0s
+[+] Running 0/0
+ - Network laravel-crud-app_customnetwork  Error                                                                   0.0s
+failed to create network laravel-crud-app_customnetwork: Error response from daemon: Pool overlaps with other one on this address space
+
+Al ejecutar el comando:
+docker network prune
+
+eliminamos cualquier red previamente existente, y ahora sí funciona:
+
+Attaching to laravel-crud-app-app1-1
+laravel-crud-app-app1-1 | eth0      Link encap:Ethernet  HWaddr 02:42:AC:14:00:0A  
+laravel-crud-app-app1-1 |           inet addr:172.20.0.10  Bcast:172.20.255.255  Mask:255.255.0.0
+laravel-crud-app-app1-1 |           UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+laravel-crud-app-app1-1 |           RX packets:2 errors:0 dropped:0 overruns:0 frame:0
+laravel-crud-app-app1-1 |           TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+laravel-crud-app-app1-1 |           collisions:0 txqueuelen:0 
+laravel-crud-app-app1-1 |           RX bytes:180 (180.0 B)  TX bytes:0 (0.0 B)
+laravel-crud-app-app1-1 | 
+laravel-crud-app-app1-1 | lo        Link encap:Local Loopback  
+laravel-crud-app-app1-1 |           inet addr:127.0.0.1  Mask:255.0.0.0
+laravel-crud-app-app1-1 |           UP LOOPBACK RUNNING  MTU:65536  Metric:1
+laravel-crud-app-app1-1 |           RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+laravel-crud-app-app1-1 |           TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+laravel-crud-app-app1-1 |           collisions:0 txqueuelen:1000 
+laravel-crud-app-app1-1 |           RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+laravel-crud-app-app1-1 | 
+laravel-crud-app-app1-1 exited with code 0
+
+donde notamos que la IP (inet addr:172.20.0.10) es la deseada.
+
+
+39. Al usar esta IP en Dockerfile, y eliminado el ifconfig:
+
+#configuramos el container para que ejecute laravel en desarrollo:
+CMD ["php", "artisan", "serve", "--host", "172.20.0.10"]
+
+el container se inicia como se esperaba:
+
+Attaching to laravel-crud-app-app1-1
+laravel-crud-app-app1-1 | Starting Laravel development server: http://172.20.0.10:8000
+laravel-crud-app-app1-1 | [Wed Jul 20 14:58:47 2022] PHP 8.0.6 Development Server (http://172.20.0.10:8000) started
+
+y al exponer el puerto:
+
+#abrimos puerto 8000
+EXPOSE 8000
+
+
+funcionan las urls en el browser:
+
+http://localhost:5000
+http://localhost:5000/students/create
+
+
+
 
 
