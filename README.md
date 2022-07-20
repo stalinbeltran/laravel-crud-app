@@ -642,7 +642,17 @@ y ahora la imagen sí se genera.
 
 
 
+34. Al comentar el puerto abierto en Dockerfile:
 
+# abrimos puerto 8000
+# EXPOSE 8000
+
+se sigue generando el mismo error:
+
+Attaching to laravel-crud-app-app1-1
+laravel-crud-app-app1-1 | Starting Laravel development server: http://172.17.0.2:8000
+laravel-crud-app-app1-1 | [Wed Jul 20 13:13:30 2022] Failed to listen on 172.17.0.2:8000 (reason: Address not available)
+laravel-crud-app-app1-1 | Starting Laravel development server: http://172.17.0.2:8001
 
 
 
