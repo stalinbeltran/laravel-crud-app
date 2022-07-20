@@ -655,4 +655,6 @@ laravel-crud-app-app1-1 | [Wed Jul 20 13:13:30 2022] Failed to listen on 172.17.
 laravel-crud-app-app1-1 | Starting Laravel development server: http://172.17.0.2:8001
 
 
+35. Cambiar ENTRYPOINT por CMD, no resuelve el problema.
+
 
