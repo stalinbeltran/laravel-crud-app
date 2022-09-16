@@ -274,3 +274,536 @@ La alternativa es crear manualmente un contenedor que realice las mismas funcion
 
 
 
+
+
+
+
+
+
+
+
+
+15. Empezamos la implementacion manual de entorno de desarrollo laravel. Avanzaremos paso a paso para entender lo que se está haciendo.
+Primero reducimos Dockerfile a lo sgte:
+
+FROM composer:2.0 as build
+COPY . /app/
+RUN composer install
+
+Luego compilamos la imagen con nombre 'laravel-crud-app'
+
+docker build -t sbeltran2006/laravel-crud-app .
+
+C:\desarrollo\pruebasDocker\laravel-crud-app>docker build -t sbeltran2006/laravel-crud-app .
+[+] Building 16.2s (9/9) FINISHED
+ => [internal] load build definition from Dockerfile                                                               0.1s
+ => => transferring dockerfile: 98B                                                                                0.0s
+ => [internal] load .dockerignore                                                                                  0.0s
+ => => transferring context: 2B                                                                                    0.0s
+ => [internal] load metadata for docker.io/library/composer:2.0                                                    3.7s
+ => [auth] library/composer:pull token for registry-1.docker.io                                                    0.0s
+ => [internal] load build context                                                                                  6.5s
+ => => transferring context: 36.56MB                                                                               6.4s
+ => CACHED [1/3] FROM docker.io/library/composer:2.0@sha256:b3703ad1ca8e91a301c2653844633a9aa91734f3fb278c56e2745  0.0s
+ => [2/3] COPY . /app/                                                                                             1.9s
+ => [3/3] RUN composer install                                                                                     2.5s
+ => exporting to image                                                                                             1.4s
+ => => exporting layers                                                                                            1.4s
+ => => writing image sha256:8eec97aef90ffadb62ba113248380a253bbad217949574d72b846ad26403d0d8                       0.0s
+ => => naming to docker.io/sbeltran2006/laravel-crud-app                                                           0.0s
+
+
+
+16. Revisamos el contenido de la imagen:
+docker run -it sbeltran2006/laravel-crud-app sh
+
+C:\desarrollo\pruebasDocker\laravel-crud-app>docker run -it sbeltran2006/laravel-crud-app sh
+/app # ls
+Dockerfile  artisan        composer.lock  docker-compose.yml  public     server.php  vendor
+README.md   bootstrap      config         package.json        resources  storage     webpack.mix.js
+app         composer.json  database       phpunit.xml         routes     tests
+
+
+Notamos que se han copiado los archivos del proyecto, como se espera por la instrucción en Dockerfile:
+
+COPY . /app/
+
+
+
+17. Probamos a ejecutar el proyecto:
+php artisan serve
+
+/app # php artisan serve
+Starting Laravel development server: http://127.0.0.1:8000
+[Mon Jul 11 20:32:36 2022] PHP 8.0.6 Development Server (http://127.0.0.1:8000) started
+
+
+pero no podemos ejecutar la aplicación en el browser porque no tenemos un puerto abierto
+
+
+18. Abrimos un puerto en Dockerfile:
+
+#abrimos puerto 8000
+EXPOSE 8000
+
+
+19. Mapeamos puerto 5000 en localhost a 8000 container en archivo docker-compose.yml:
+
+ version: "3.7"
+
+ services:
+   app1:
+     ports:
+       - 5000:8000
+
+
+20. Para verificar, compilammos proyecto con docker compose:
+docker compose up -d --build
+
+
+C:\desarrollo\pruebasDocker\laravel-crud-app>docker compose up -d --build
+[+] Building 11.7s (9/9) FINISHED
+ => [internal] load build definition from Dockerfile                                                               0.0s
+ => => transferring dockerfile: 132B                                                                               0.0s
+ => [internal] load .dockerignore                                                                                  0.0s
+ => => transferring context: 2B                                                                                    0.0s
+ => [internal] load metadata for docker.io/library/composer:2.0                                                    2.6s
+ => [auth] library/composer:pull token for registry-1.docker.io                                                    0.0s
+ => [internal] load build context                                                                                  3.4s
+ => => transferring context: 36.58MB                                                                               3.4s
+ => CACHED [1/3] FROM docker.io/library/composer:2.0@sha256:b3703ad1ca8e91a301c2653844633a9aa91734f3fb278c56e2745  0.0s
+ => [2/3] COPY . /app/                                                                                             1.8s
+ => [3/3] RUN composer install                                                                                     2.4s
+ => exporting to image                                                                                             1.3s
+ => => exporting layers                                                                                            1.3s
+ => => writing image sha256:cde5904a2bd80921ac44b72b1b175e3c5ef4890f92701e56930ad5472805b405                       0.0s
+ => => naming to docker.io/sbeltran2006/laravel-crud-app                                                           0.0s
+[+] Running 1/1
+ - Container laravel-crud-app-app1-1  Started                                                                      1.8s
+
+
+Pero vemos que el container salió, nunca se ejecutó. Tal vez falta una aplicación que se ejecute todo el tiempo, para que no se termine la ejecución del container.
+
+
+21. Probamos agregar un ENTRYPOINT al Dockerfile:
+
+ENTRYPOINT ["php", "artisan", "serve"]
+
+y compilamos:
+docker compose up -d --build
+
+El contenedor se mantiene en ejecución, pero no es accesible desde localhost.
+
+
+22. Haciendo pruebas e investigando, hallé que el problema está en el comando laravel:
+
+php artisan serve
+que debería agregar el parámetro host:
+php artisan serve --host 172.17.0.2
+
+y al hacerlo así, funcionan estas páginas:
+
+http://localhost:5000                   #muestra index laravel default
+http://localhost:5000/students/create   #muestra crear estudiante
+
+
+El problema con esta opción es que tenemos q conocer la IP del container, y la obtuvimos manualmente.
+
+
+23. Probamos a usar la ip localhost:
+
+php artisan serve --host 127.0.0.1
+
+pero no funciona. No obtenemos ninguna respuesta desde el host.
+
+
+24. Probamos a usar "host.docker.internal" para obtener IP interna del container:
+docker run -it -p 5000:8000  sbeltran2006/laravel-crud-app sh
+php artisan serve --host host.docker.internal
+
+pero falla porque la dirección no está disponible
+
+C:\desarrollo\pruebasDocker\laravel-crud-app>docker run -it -p 5000:8000  sbeltran2006/laravel-crud-app sh
+/app # php artisan serve --host host.docker.internal
+Starting Laravel development server: http://host.docker.internal:8000
+[Mon Jul 18 13:06:44 2022] Failed to listen on host.docker.internal:8000 (reason: Address not available)
+Starting Laravel development server: http://host.docker.internal:8001
+[Mon Jul 18 13:06:44 2022] Failed to listen on host.docker.internal:8001 (reason: Address not available)
+Starting Laravel development server: http://host.docker.internal:8002
+[Mon Jul 18 13:06:45 2022] Failed to listen on host.docker.internal:8002 (reason: Address not available)
+Starting Laravel development server: http://host.docker.internal:8003
+[Mon Jul 18 13:06:45 2022] Failed to listen on host.docker.internal:8003 (reason: Address not available)
+Starting Laravel development server: http://host.docker.internal:8004
+[Mon Jul 18 13:06:46 2022] Failed to listen on host.docker.internal:8004 (reason: Address not available)
+Starting Laravel development server: http://host.docker.internal:8005
+[Mon Jul 18 13:06:46 2022] Failed to listen on host.docker.internal:8005 (reason: Address not available)
+Starting Laravel development server: http://host.docker.internal:8006
+[Mon Jul 18 13:06:47 2022] Failed to listen on host.docker.internal:8006 (reason: Address not available)
+Starting Laravel development server: http://host.docker.internal:8007
+[Mon Jul 18 13:06:47 2022] Failed to listen on host.docker.internal:8007 (reason: Address not available)
+Starting Laravel development server: http://host.docker.internal:8008
+[Mon Jul 18 13:06:48 2022] Failed to listen on host.docker.internal:8008 (reason: Address not available)
+Starting Laravel development server: http://host.docker.internal:8009
+[Mon Jul 18 13:06:48 2022] Failed to listen on host.docker.internal:8009 (reason: Address not available)
+Starting Laravel development server: http://host.docker.internal:8010
+[Mon Jul 18 13:06:49 2022] Failed to listen on host.docker.internal:8010 (reason: Address not available)
+/app #
+
+25. Verificamos, y sí funciona usando
+php artisan serve --host 172.17.0.2
+
+lo que indica que host.docker.internal no nos da la ip interna del contenedor
+
+
+26. Cambiamos el entrypoint en Dockerfile:
+
+#configuramos el container para que ejecute laravel en desarrollo:
+ENTRYPOINT ["php", "artisan", "serve", "--host", "172.17.0.2"]
+
+recompilamos:
+docker compose up -d --build
+
+C:\desarrollo\pruebasDocker\laravel-crud-app>docker compose up -d --build
+[+] Building 10.3s (9/9) FINISHED
+ => [internal] load build definition from Dockerfile                                                               0.0s
+ => => transferring dockerfile: 267B                                                                               0.0s
+ => [internal] load .dockerignore                                                                                  0.0s
+ => => transferring context: 2B                                                                                    0.0s
+ => [internal] load metadata for docker.io/library/composer:2.0                                                    2.8s
+ => [auth] library/composer:pull token for registry-1.docker.io                                                    0.0s
+ => [internal] load build context                                                                                  3.4s
+ => => transferring context: 670.16kB                                                                              3.3s
+ => CACHED [1/3] FROM docker.io/library/composer:2.0@sha256:b3703ad1ca8e91a301c2653844633a9aa91734f3fb278c56e2745  0.0s
+ => [2/3] COPY . /app/                                                                                             0.9s
+ => [3/3] RUN composer install                                                                                     1.7s
+ => exporting to image                                                                                             1.3s
+ => => exporting layers                                                                                            1.3s
+ => => writing image sha256:cba11b68153365e9bed280d059a67290ed5b03663eea65e92c36f2d3f92bcbe9                       0.0s
+ => => naming to docker.io/sbeltran2006/laravel-crud-app                                                           0.0s
+[+] Running 1/1
+ - Container laravel-crud-app-app1-1  Started                                                                      4.4s
+
+
+y lo ejecutamos:
+docker run -it sbeltran2006/laravel-crud-app sh
+
+obtenemos:
+ Too many arguments, expected arguments "command".
+
+Sin embargo, funciona si usamos:
+docker run -it sbeltran2006/laravel-crud-app
+
+pero no tenemos acceso desde el browser en laptop (host)
+
+
+27. Exponemos puerto 8000 en Dockerfile (puede ser la causa del problema):
+
+#abrimos puerto 8000
+EXPOSE 8000
+
+Recompilamos:
+docker compose up -d --build
+
+y ejecutamos:
+docker run -it -p 5000:8000  sbeltran2006/laravel-crud-app
+
+y ahora sí funciona en el browser de host:
+urls:
+http://localhost:5000/
+http://localhost:5000/students/create
+
+
+28. Podemos ejecutarla en segundo plano con este comando:
+docker run -d -p 5000:8000  sbeltran2006/laravel-crud-app
+
+que es el objetivo de tener un container para desarrollo en Laravel.
+
+29. Al cambiar el contenido de un view:
+
+          <div class="form-group">
+              @csrf
+              <label for="name">Name XXX</label>
+              <input type="text" class="form-control" name="name"/>
+          </div>
+
+notamos que no se actualiza. Falta lograr ese efecto, posiblemente creando un volumen
+
+
+30. Modificamos Dockerfile para que no copie codigo fuente:
+
+#COPY . /app/               no copiamos codigo fuente
+
+y compilamos:
+docker compose up -d --build
+
+C:\desarrollo\pruebasDocker\laravel-crud-app>docker compose up -d --build
+[+] Building 5.8s (6/6) FINISHED
+ => [internal] load build definition from Dockerfile                                                               0.1s
+ => => transferring dockerfile: 307B                                                                               0.0s
+ => [internal] load .dockerignore                                                                                  0.0s
+ => => transferring context: 2B                                                                                    0.0s
+ => [internal] load metadata for docker.io/library/composer:2.0                                                    3.4s
+ => [auth] library/composer:pull token for registry-1.docker.io                                                    0.0s
+ => CACHED [1/2] FROM docker.io/library/composer:2.0@sha256:b3703ad1ca8e91a301c2653844633a9aa91734f3fb278c56e2745  0.0s
+ => ERROR [2/2] RUN composer install                                                                               2.0s
+------
+ > [2/2] RUN composer install:
+#5 1.996 Composer could not find a composer.json file in /app
+#5 1.996 To initialize a project, please create a composer.json file as described in the https://getcomposer.org/ "Getting Started" section
+------
+failed to solve: rpc error: code = Unknown desc = executor failed running [/bin/sh -c composer install]: exit code: 1
+
+
+y obtenemos el error: "Composer could not find a composer.json file in /app", probablemente por la falta del código fuente.
+
+
+
+31. Copiamos código fuente:
+
+#copiamos codigo fuente
+COPY . /app/
+
+compilamos:
+
+C:\desarrollo\pruebasDocker\laravel-crud-app>docker compose up -d --build
+[+] Building 3.1s (8/8) FINISHED
+ => [internal] load build definition from Dockerfile                                                               0.0s
+ => => transferring dockerfile: 32B                                                                                0.0s
+ => [internal] load .dockerignore                                                                                  0.0s
+ => => transferring context: 2B                                                                                    0.0s
+ => [internal] load metadata for docker.io/library/composer:2.0                                                    1.2s
+ => [internal] load build context                                                                                  1.7s
+ => => transferring context: 649.58kB                                                                              1.7s
+ => [1/3] FROM docker.io/library/composer:2.0@sha256:b3703ad1ca8e91a301c2653844633a9aa91734f3fb278c56e2745f589657  0.0s
+ => CACHED [2/3] COPY . /app/                                                                                      0.0s
+ => CACHED [3/3] RUN composer install                                                                              0.0s
+ => exporting to image                                                                                             0.1s
+ => => exporting layers                                                                                            0.0s
+ => => writing image sha256:9216402bbd954376e3c240ad17005aa86aedb0abcde6d7d419818078dd465eaa                       0.0s
+ => => naming to docker.io/sbeltran2006/laravel-crud-app                                                           0.0s
+[+] Running 1/1
+ - Container laravel-crud-app-app1-1  Started
+
+pero container se apaga (no se ejecuta laravel).
+Container muestra este log:
+
+Starting Laravel development server: http://172.17.0.2:8000
+[Tue Jul 19 20:03:22 2022] Failed to listen on 172.17.0.2:8000 (reason: Address not available)
+Starting Laravel development server: http://172.17.0.2:8001
+[Tue Jul 19 20:03:22 2022] Failed to listen on 172.17.0.2:8001 (reason: Address not available)
+Starting Laravel development server: http://172.17.0.2:8002
+[Tue Jul 19 20:03:23 2022] Failed to listen on 172.17.0.2:8002 (reason: Address not available)
+Starting Laravel development server: http://172.17.0.2:8003
+[Tue Jul 19 20:03:23 2022] Failed to listen on 172.17.0.2:8003 (reason: Address not available)
+Starting Laravel development server: http://172.17.0.2:8004
+[Tue Jul 19 20:03:24 2022] Failed to listen on 172.17.0.2:8004 (reason: Address not available)
+Starting Laravel development server: http://172.17.0.2:8005
+[Tue Jul 19 20:03:24 2022] Failed to listen on 172.17.0.2:8005 (reason: Address not available)
+Starting Laravel development server: http://172.17.0.2:8006
+[Tue Jul 19 20:03:25 2022] Failed to listen on 172.17.0.2:8006 (reason: Address not available)
+Starting Laravel development server: http://172.17.0.2:8007
+[Tue Jul 19 20:03:25 2022] Failed to listen on 172.17.0.2:8007 (reason: Address not available)
+Starting Laravel development server: http://172.17.0.2:8008
+[Tue Jul 19 20:03:26 2022] Failed to listen on 172.17.0.2:8008 (reason: Address not available)
+Starting Laravel development server: http://172.17.0.2:8009
+[Tue Jul 19 20:03:26 2022] Failed to listen on 172.17.0.2:8009 (reason: Address not available)
+Starting Laravel development server: http://172.17.0.2:8010
+[Tue Jul 19 20:03:27 2022] Failed to listen on 172.17.0.2:8010 (reason: Address not available)
+
+
+32. Removemos volumes del Dockerfile:
+
+     volumes:
+      - .:/app/
+
+compilamos, pero sigue sin funcionar.
+
+
+33. Al remover imagen de docker-compose.yml:
+
+#     image: sbeltran2006/laravel-crud-app
+
+obtenemos el mismo error:
+
+Starting Laravel development server: http://172.17.0.2:8000
+[Tue Jul 19 20:03:22 2022] Failed to listen on 172.17.0.2:8000 (reason: Address not available)
+Starting Laravel development server: http://172.17.0.2:8001
+[Tue Jul 19 20:03:22 2022] Failed to listen on 172.17.0.2:8001 (reason: Address not available)
+...
+
+pero al revisar las imágenes, vemos que se no creó la imagen, lo que indica que al comentar el nombre sólo impedimos que se genere la imagen. Por lo tanto, volvemos a descomentar este punto en docker-compose.yml
+
+     image: sbeltran2006/laravel-crud-app
+
+compilammos:
+docker compose up -d --build
+
+y ahora la imagen sí se genera.
+
+
+
+34. Al comentar el puerto abierto en Dockerfile:
+
+# abrimos puerto 8000
+# EXPOSE 8000
+
+se sigue generando el mismo error:
+
+Attaching to laravel-crud-app-app1-1
+laravel-crud-app-app1-1 | Starting Laravel development server: http://172.17.0.2:8000
+laravel-crud-app-app1-1 | [Wed Jul 20 13:13:30 2022] Failed to listen on 172.17.0.2:8000 (reason: Address not available)
+laravel-crud-app-app1-1 | Starting Laravel development server: http://172.17.0.2:8001
+
+
+35. Cambiar ENTRYPOINT por CMD, no resuelve el problema.
+
+36. Al agregar ifconfig a Dockerfile:
+
+#configuramos el container para que ejecute laravel en desarrollo:
+CMD ["php", "artisan", "serve", "--host", "172.17.0.2"]
+CMD ["ifconfig"]
+
+Notamos que el problema es que la IP no es la misma que estamos especificando en el comando, lo que explica el error generado.
+
+Attaching to laravel-crud-app-app1-1
+laravel-crud-app-app1-1 | eth0      Link encap:Ethernet  HWaddr 02:42:AC:1C:00:02  
+laravel-crud-app-app1-1 |           inet addr:172.28.0.2  Bcast:172.28.255.255  Mask:255.255.0.0
+laravel-crud-app-app1-1 |           UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+laravel-crud-app-app1-1 |           RX packets:4 errors:0 dropped:0 overruns:0 frame:0
+laravel-crud-app-app1-1 |           TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+laravel-crud-app-app1-1 |           collisions:0 txqueuelen:0 
+laravel-crud-app-app1-1 |           RX bytes:356 (356.0 B)  TX bytes:0 (0.0 B)
+laravel-crud-app-app1-1 | 
+laravel-crud-app-app1-1 | lo        Link encap:Local Loopback  
+laravel-crud-app-app1-1 |           inet addr:127.0.0.1  Mask:255.0.0.0
+laravel-crud-app-app1-1 |           UP LOOPBACK RUNNING  MTU:65536  Metric:1
+laravel-crud-app-app1-1 |           RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+laravel-crud-app-app1-1 |           TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+laravel-crud-app-app1-1 |           collisions:0 txqueuelen:1000 
+laravel-crud-app-app1-1 |           RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+laravel-crud-app-app1-1 | 
+laravel-crud-app-app1-1 exited with code 0
+
+
+37. Al ejecutar:
+docker-compose exec app1 sh
+(app1 es el servicio definido en docker-compose.yml)
+
+no aparece el container en ejecución (o desaparece tan rápido que no lo notamos)
+
+
+38. Modificamos el docker-compose para que tenga una IP fija:
+
+ version: "3.7"
+
+ services:
+   app1:
+     ports:
+       - 5000:8000
+     build: .
+     image: sbeltran2006/laravel-crud-app
+     networks:
+      customnetwork:
+        ipv4_address: 172.20.0.10
+
+ networks:
+  customnetwork:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+
+al compilar, obtenemos este error:
+
+C:\desarrollo\pruebasDocker\laravel-crud-app>docker compose up -d --build
+[+] Building 9.6s (9/9) FINISHED
+ => [internal] load build definition from Dockerfile                                                               0.0s
+ => => transferring dockerfile: 32B                                                                                0.0s
+ => [internal] load .dockerignore                                                                                  0.0s
+ => => transferring context: 2B                                                                                    0.0s
+ => [internal] load metadata for docker.io/library/composer:2.0                                                    2.6s
+ => [auth] library/composer:pull token for registry-1.docker.io                                                    0.0s
+ => [internal] load build context                                                                                  3.0s
+ => => transferring context: 734.11kB                                                                              3.0s
+ => CACHED [1/3] FROM docker.io/library/composer:2.0@sha256:b3703ad1ca8e91a301c2653844633a9aa91734f3fb278c56e2745  0.0s
+ => [2/3] COPY . /app/                                                                                             1.0s
+ => [3/3] RUN composer install                                                                                     1.6s
+ => exporting to image                                                                                             1.3s
+ => => exporting layers                                                                                            1.3s
+ => => writing image sha256:6afedcafe00c1eddfe82aef67f9165615f39d387aa37011cb401542de833041b                       0.0s
+ => => naming to docker.io/sbeltran2006/laravel-crud-app                                                           0.0s
+[+] Running 0/0
+ - Network laravel-crud-app_customnetwork  Error                                                                   0.0s
+failed to create network laravel-crud-app_customnetwork: Error response from daemon: Pool overlaps with other one on this address space
+
+Al ejecutar el comando:
+docker network prune
+
+eliminamos cualquier red previamente existente, y ahora sí funciona:
+
+Attaching to laravel-crud-app-app1-1
+laravel-crud-app-app1-1 | eth0      Link encap:Ethernet  HWaddr 02:42:AC:14:00:0A  
+laravel-crud-app-app1-1 |           inet addr:172.20.0.10  Bcast:172.20.255.255  Mask:255.255.0.0
+laravel-crud-app-app1-1 |           UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+laravel-crud-app-app1-1 |           RX packets:2 errors:0 dropped:0 overruns:0 frame:0
+laravel-crud-app-app1-1 |           TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+laravel-crud-app-app1-1 |           collisions:0 txqueuelen:0 
+laravel-crud-app-app1-1 |           RX bytes:180 (180.0 B)  TX bytes:0 (0.0 B)
+laravel-crud-app-app1-1 | 
+laravel-crud-app-app1-1 | lo        Link encap:Local Loopback  
+laravel-crud-app-app1-1 |           inet addr:127.0.0.1  Mask:255.0.0.0
+laravel-crud-app-app1-1 |           UP LOOPBACK RUNNING  MTU:65536  Metric:1
+laravel-crud-app-app1-1 |           RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+laravel-crud-app-app1-1 |           TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+laravel-crud-app-app1-1 |           collisions:0 txqueuelen:1000 
+laravel-crud-app-app1-1 |           RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+laravel-crud-app-app1-1 | 
+laravel-crud-app-app1-1 exited with code 0
+
+donde notamos que la IP (inet addr:172.20.0.10) es la deseada.
+
+
+39. Al usar esta IP en Dockerfile, y eliminado el ifconfig:
+
+#configuramos el container para que ejecute laravel en desarrollo:
+CMD ["php", "artisan", "serve", "--host", "172.20.0.10"]
+
+el container se inicia como se esperaba:
+
+Attaching to laravel-crud-app-app1-1
+laravel-crud-app-app1-1 | Starting Laravel development server: http://172.20.0.10:8000
+laravel-crud-app-app1-1 | [Wed Jul 20 14:58:47 2022] PHP 8.0.6 Development Server (http://172.20.0.10:8000) started
+
+y al exponer el puerto:
+
+#abrimos puerto 8000
+EXPOSE 8000
+
+y compilando:
+docker compose up -d --build
+
+funcionan las urls en el browser:
+
+http://localhost:5000
+http://localhost:5000/students/create
+
+
+
+40. Al incluir el volumen (antes eliminado) en el docker-compose:
+
+     image: sbeltran2006/laravel-crud-app
+     volumes:
+      - .:/app/
+     networks:
+
+y al modificar el código en localhost, create.blade.php:
+
+          <div class="form-group">
+              @csrf
+              <label for="name">Name XXX uuu</label>
+              <input type="text" class="form-control" name="name"/>
+          </div>
+
+vemos que el cambio se refleja en el browser, que es lo que se desea lograr.
+
+
