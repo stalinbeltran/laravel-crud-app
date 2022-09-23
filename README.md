@@ -842,8 +842,8 @@ Hallamos una db llamada MY_DATABASE, vacía. No hallamos database laravel_db (q 
 Tal vez fue creada al inicio, y ya no se puede cambiar.
 
 
-43. Efectivamente, al destruir el volumen db actual, y volver a construirlo, se crea la DB laravel_db y aparece en Heidi
+43. Efectivamente, al destruir (remover desde Docker Desktop) el volumen db actual, y volver a construirlo, se crea la DB laravel_db y aparece en Heidi
 
-
+44. Probamos a detener el container de la DB, y no se crea DB (se mantiene la original)
 
 
