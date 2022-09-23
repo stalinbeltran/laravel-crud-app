@@ -807,3 +807,25 @@ y al modificar el código en localhost, create.blade.php:
 vemos que el cambio se refleja en el browser, que es lo que se desea lograr.
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+41. Ahora trataremos de agregar una DB mysql a este contenedor
+Al compilar, obtenemos este error:
+C:\desarrollo\pruebasDocker\laravel-crud-app>docker compose up -d --build
+(root) Additional property db is not allowed
+
