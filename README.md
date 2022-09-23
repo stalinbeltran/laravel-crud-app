@@ -829,3 +829,18 @@ Al compilar, obtenemos este error:
 C:\desarrollo\pruebasDocker\laravel-crud-app>docker compose up -d --build
 (root) Additional property db is not allowed
 
+
+42. Cambiamos nombre de database, nos conectamos a mysql mediante Heidi usando los parámetros:
+DB_CONNECTION=mysql
+DB_HOST=db
+DB_PORT=3306
+DB_DATABASE=laravel_db
+DB_USERNAME=MYSQL_USER
+DB_PASSWORD=MYSQL_PASSWORD
+
+Hallamos una db llamada MY_DATABASE, vacía. No hallamos database laravel_db (q es la que esperamos)
+Tal vez fue creada al inicio, y ya no se puede cambiar.
+
+
+
+
