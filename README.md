@@ -846,4 +846,6 @@ Tal vez fue creada al inicio, y ya no se puede cambiar.
 
 44. Probamos a detener el container de la DB, y no se crea DB (se mantiene la original)
 
-
+45. para inicializar database:
+volumes:
+      - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql
