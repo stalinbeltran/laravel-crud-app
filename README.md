@@ -846,6 +846,9 @@ Tal vez fue creada al inicio, y ya no se puede cambiar.
 
 44. Probamos a detener el container de la DB, y no se crea DB (se mantiene la original)
 
-45. para inicializar database:
-volumes:
-      - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql
+45. Para inicializar database ponemos un dump en la carpeta raiz del proyecto, y agregamos la siguiente línea al docker-compose:
+
+    volumes:
+      - ./laravel_db.sql:/docker-entrypoint-initdb.d/dump.sql
+
+
