@@ -12,8 +12,7 @@
       customnetwork:
         ipv4_address: 172.20.0.10
 
-   db:
-    container_name: db
+   dba:
     image: mysql
     restart: always
     environment:
@@ -22,7 +21,9 @@
         MYSQL_USER: MYSQL_USER
         MYSQL_PASSWORD: MYSQL_PASSWORD
     ports:
-        - "9906:3306"
+        - "9907:3306"
+    volumes:
+      - ./laravel_db.sql:/docker-entrypoint-initdb.d/dump.sql
 
 
 
