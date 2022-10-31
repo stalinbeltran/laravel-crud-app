@@ -941,3 +941,29 @@ time="2022-10-31T08:36:41-05:00" level=warning msg="Found orphan containers ([db
  - Container laravel-crud-app-dba-1   Started                                                                     13.4s
  - Container laravel-crud-app-app1-1  Started
 
+
+
+48. Listando las redes docker, vemos que existen algunas redes, 2 de las cuales parecen estar relacionadas con esta app (laravel-crud-app_customnetwork y laravel-crud-app_default):
+
+C:\desarrollo\pruebasDocker\laravel-crud-app>docker network ls
+NETWORK ID     NAME                             DRIVER    SCOPE
+f2696d544c33   bridge                           bridge    local
+94241e2412ef   host                             host      local
+5d6f384220ab   laravel-crud-app_customnetwork   bridge    local
+c9cef8c5dd27   laravel-crud-app_default         bridge    local
+8c5bb281f95a   none                             null      local
+
+C:\desarrollo\pruebasDocker\laravel-crud-app>
+C:\desarrollo\pruebasDocker\laravel-crud-app>docker network prune
+WARNING! This will remove all custom networks not used by at least one container.
+Are you sure you want to continue? [y/N] y
+
+C:\desarrollo\pruebasDocker\laravel-crud-app>docker network ls
+NETWORK ID     NAME                             DRIVER    SCOPE
+f2696d544c33   bridge                           bridge    local
+94241e2412ef   host                             host      local
+5d6f384220ab   laravel-crud-app_customnetwork   bridge    local
+c9cef8c5dd27   laravel-crud-app_default         bridge    local
+8c5bb281f95a   none                             null      local
+
+
