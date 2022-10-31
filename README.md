@@ -915,5 +915,29 @@ time="2022-10-31T08:31:17-05:00" level=warning msg="Found orphan containers ([db
  - Container laravel-crud-app-app1-1  Started                                                                      2.3s
 Error response from daemon: driver failed programming external connectivity on endpoint laravel-crud-app-dba-1 (45a186ce6ee8961aeda0eec663b0b46c5486f4019a0d52ecdd540296e185bf70): Bind for 0.0.0.0:9907 failed: port is already allocated
 
+Este error se puede corregir simplemente apagando la instancia que usa ese puerto, pero decidí cambiar el puerto para evitar el conflicto, y esta vez sí funciona (alertando que quedaron containers huérfanos):
 
+
+C:\desarrollo\pruebasDocker\laravel-crud-app>docker compose up -d --build
+[+] Building 67.0s (10/10) FINISHED
+ => [internal] load build definition from Dockerfile                                                               0.0s
+ => => transferring dockerfile: 493B                                                                               0.0s
+ => [internal] load .dockerignore                                                                                  0.0s
+ => => transferring context: 2B                                                                                    0.0s
+ => [internal] load metadata for docker.io/library/composer:2.0                                                    1.8s
+ => [auth] library/composer:pull token for registry-1.docker.io                                                    0.0s
+ => [internal] load build context                                                                                  1.8s
+ => => transferring context: 760.73kB                                                                              1.7s
+ => CACHED [1/4] FROM docker.io/library/composer:2.0@sha256:b3703ad1ca8e91a301c2653844633a9aa91734f3fb278c56e2745  0.0s
+ => [2/4] COPY . /app/                                                                                             1.3s
+ => [3/4] RUN composer install                                                                                     2.0s
+ => [4/4] RUN docker-php-ext-install pdo pdo_mysql                                                                58.6s
+ => exporting to image                                                                                             1.4s
+ => => exporting layers                                                                                            1.4s
+ => => writing image sha256:955f14a69a08176ceffd2497fed2d9d683717163fffedc5206575b03f4d8a744                       0.0s
+ => => naming to docker.io/sbeltran2006/laravel-crud-app                                                           0.0s
+time="2022-10-31T08:36:41-05:00" level=warning msg="Found orphan containers ([db]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+[+] Running 2/2
+ - Container laravel-crud-app-dba-1   Started                                                                     13.4s
+ - Container laravel-crud-app-app1-1  Started
 
