@@ -888,5 +888,32 @@ time="2022-10-31T08:09:21-05:00" level=warning msg="Found orphan containers ([db
 Error response from daemon: Conflict. The container name "/db" is already in use by container "048845798ad5d7935e250832a12ab52a103039c9c0eace8b2d9fe8387e03c1b7". You have to remove (or rename) that container to be able to reuse that name.
 
 
+47. Al eliminar el nombre y ejecutar nuevamente, obtenemos el error: "port is already allocated":
+
+
+C:\desarrollo\pruebasDocker\laravel-crud-app>docker compose up -d --build
+[+] Building 100.7s (10/10) FINISHED
+ => [internal] load build definition from Dockerfile                                                               0.0s
+ => => transferring dockerfile: 32B                                                                                0.0s
+ => [internal] load .dockerignore                                                                                  0.0s
+ => => transferring context: 2B                                                                                    0.0s
+ => [internal] load metadata for docker.io/library/composer:2.0                                                    2.4s
+ => [auth] library/composer:pull token for registry-1.docker.io                                                    0.0s
+ => [internal] load build context                                                                                  1.8s
+ => => transferring context: 753.35kB                                                                              1.7s
+ => CACHED [1/4] FROM docker.io/library/composer:2.0@sha256:b3703ad1ca8e91a301c2653844633a9aa91734f3fb278c56e2745  0.0s
+ => [2/4] COPY . /app/                                                                                             2.7s
+ => [3/4] RUN composer install                                                                                     2.3s
+ => [4/4] RUN docker-php-ext-install pdo pdo_mysql                                                                89.7s
+ => exporting to image                                                                                             1.5s
+ => => exporting layers                                                                                            1.5s
+ => => writing image sha256:aab4431825e4c69161557d618a0a571d8b3702b4c4ef1f3b2e0ceb57dcf87e5e                       0.0s
+ => => naming to docker.io/sbeltran2006/laravel-crud-app                                                           0.0s
+time="2022-10-31T08:31:17-05:00" level=warning msg="Found orphan containers ([db]) for this project. If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+[+] Running 1/2
+ - Container laravel-crud-app-dba-1   Starting                                                                     2.3s
+ - Container laravel-crud-app-app1-1  Started                                                                      2.3s
+Error response from daemon: driver failed programming external connectivity on endpoint laravel-crud-app-dba-1 (45a186ce6ee8961aeda0eec663b0b46c5486f4019a0d52ecdd540296e185bf70): Bind for 0.0.0.0:9907 failed: port is already allocated
+
 
 
