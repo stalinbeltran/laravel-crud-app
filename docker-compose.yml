@@ -12,7 +12,7 @@
       customnetwork:
         ipv4_address: 172.20.0.10
 
-   dba:
+   db:
     image: mysql
     restart: always
     environment:

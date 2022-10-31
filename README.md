@@ -1021,3 +1021,35 @@ Sin embargo, el error en el browser sigue siendo el mismo:
 Illuminate\Database\QueryException
 SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo failed: Try again (SQL: select * from `students`) 
 
+
+
+50. Al cambiar nombre del servicio, 
+
+   db:
+    image: mysql
+    restart: always
+
+y recompilando, obtenemos el error: "port is already allocated":
+
+ If you removed or renamed this service in your compose file, you can run this command with the --remove-orphans flag to clean it up."
+[+] Running 1/2
+ - Container laravel-crud-app-db-1    Starting                                                                    12.9s
+ - Container laravel-crud-app-app1-1  Started                                                                     12.9s
+Error response from daemon: driver failed programming external connectivity on endpoint laravel-crud-app-db-1 (c77cf38d0be57137455678756d31fd810a57f2aee25c4c16258670d4f110cf5a): Bind for 0.0.0.0:9906 failed: port is already allocated
+
+
+Al remover el contenedor anterior que genera el conflicto, obtenemos:
+                                                                                          1.3s
+ => => exporting layers                                                                                            1.3s
+ => => writing image sha256:43bc5c160bd10874bc6299a3171a4280a5a89a0f959b0158c202c83971653bb4                       0.0s
+ => => naming to docker.io/sbeltran2006/laravel-crud-app                                                           0.0s
+[+] Running 2/2
+ - Container laravel-crud-app-db-1    Started                                                                     16.3s
+ - Container laravel-crud-app-app1-1  Started                                                                     16.3s
+
+
+
+y al fin obtenemos acceso a la data en la DB, en el url http://localhost:5000/students/
+(vemos listado el único estudiante de la DB)
+
+
