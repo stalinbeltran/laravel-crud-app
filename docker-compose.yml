@@ -24,7 +24,8 @@
         - "9906:3306"
     volumes:
       - ./laravel_db.sql:/docker-entrypoint-initdb.d/dump.sql
-
+    networks:
+      - customnetwork
 
 
  networks:

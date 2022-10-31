@@ -967,3 +967,57 @@ c9cef8c5dd27   laravel-crud-app_default         bridge    local
 8c5bb281f95a   none                             null      local
 
 
+
+
+49. Modificamos docker-compose para que "dba" esté en la misma red que "app1":
+
+    volumes:
+      - ./laravel_db.sql:/docker-entrypoint-initdb.d/dump.sql
+    networks:
+      - customnetwork
+
+y al compilar hallamos que ya no se usa una de las redes (laravel-crud-app_default):
+
+C:\desarrollo\pruebasDocker\laravel-crud-app>docker compose up -d --build
+[+] Building 99.7s (10/10) FINISHED
+ => [internal] load build definition from Dockerfile                                                               0.1s
+ => => transferring dockerfile: 32B                                                                                0.0s
+ => [internal] load .dockerignore                                                                                  0.0s
+ => => transferring context: 2B                                                                                    0.0s
+ => [internal] load metadata for docker.io/library/composer:2.0                                                    5.2s
+ => [auth] library/composer:pull token for registry-1.docker.io                                                    0.0s
+ => [internal] load build context                                                                                  2.3s
+ => => transferring context: 1.27MB                                                                                2.2s
+ => CACHED [1/4] FROM docker.io/library/composer:2.0@sha256:b3703ad1ca8e91a301c2653844633a9aa91734f3fb278c56e2745  0.0s
+ => [2/4] COPY . /app/                                                                                             4.3s
+ => [3/4] RUN composer install                                                                                     3.0s
+ => [4/4] RUN docker-php-ext-install pdo pdo_mysql                                                                83.4s
+ => exporting to image                                                                                             1.4s
+ => => exporting layers                                                                                            1.3s
+ => => writing image sha256:2dfa6a5d8042bbec88cab319f2a5d2b9eb63e58be613ddcef3d667aa29e8a000                       0.0s
+ => => naming to docker.io/sbeltran2006/laravel-crud-app                                                           0.0s
+[+] Running 2/2
+ - Container laravel-crud-app-dba-1   Started                                                                     13.9s
+ - Container laravel-crud-app-app1-1  Started                                                                     13.8s
+
+C:\desarrollo\pruebasDocker\laravel-crud-app>
+C:\desarrollo\pruebasDocker\laravel-crud-app>
+C:\desarrollo\pruebasDocker\laravel-crud-app>docker network prune
+WARNING! This will remove all custom networks not used by at least one container.
+Are you sure you want to continue? [y/N] y
+Deleted Networks:
+laravel-crud-app_default
+
+
+C:\desarrollo\pruebasDocker\laravel-crud-app>docker network ls
+NETWORK ID     NAME                             DRIVER    SCOPE
+f2696d544c33   bridge                           bridge    local
+94241e2412ef   host                             host      local
+5d6f384220ab   laravel-crud-app_customnetwork   bridge    local
+8c5bb281f95a   none                             null      local
+
+Sin embargo, el error en el browser sigue siendo el mismo:
+
+Illuminate\Database\QueryException
+SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo failed: Try again (SQL: select * from `students`) 
+
